@@ -1,0 +1,14 @@
+{
+  "name": "Prompt to Figma",
+  "id": "prompt-to-figma-plugin",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html",
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": ["*"],
+    "reasoning": "Connessione al backend locale per generare design tramite LLM"
+  },
+  "capabilities": [],
+  "enableProposedApi": false
+}

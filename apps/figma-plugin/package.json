@@ -1,0 +1,19 @@
+{
+  "name": "@prompt-to-figma/figma-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "esbuild src/code.ts --bundle --outfile=dist/code.js --watch",
+    "build": "esbuild src/code.ts --bundle --outfile=dist/code.js --minify",
+    "clean": "rm -rf dist/*.js"
+  },
+  "dependencies": {
+    "@prompt-to-figma/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.98.0",
+    "concurrently": "^8.2.2",
+    "esbuild": "^0.21.0",
+    "typescript": "^5.4.0"
+  }
+}
