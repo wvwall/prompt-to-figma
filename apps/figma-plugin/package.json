@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "esbuild src/code.ts --bundle --outfile=dist/code.js --watch",
-    "build": "esbuild src/code.ts --bundle --outfile=dist/code.js --minify",
+    "dev": "esbuild src/code.ts --bundle --outfile=dist/code.js --target=es2015 --watch",
+    "build": "esbuild src/code.ts --bundle --outfile=dist/code.js --target=es2015 --minify",
     "clean": "rm -rf dist/*.js"
   },
   "dependencies": {

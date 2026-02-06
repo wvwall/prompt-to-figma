@@ -1,0 +1,22 @@
+{
+  "name": "prompt-to-figma",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Natural language to Figma design compiler",
+  "scripts": {
+    "dev:api": "pnpm --filter @prompt-to-figma/api dev",
+    "dev:web": "pnpm --filter @prompt-to-figma/web dev",
+    "dev:plugin": "pnpm --filter @prompt-to-figma/figma-plugin dev",
+    "build": "pnpm -r build",
+    "build:shared": "pnpm --filter @prompt-to-figma/shared build",
+    "lint": "pnpm -r lint",
+    "clean": "pnpm -r clean"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
