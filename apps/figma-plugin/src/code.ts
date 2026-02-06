@@ -303,10 +303,10 @@ async function renderFrame(
 
   frame.name = schema.name || "Frame";
 
-  // Dimensioni base
-  if (schema.width && schema.height) {
-    frame.resize(schema.width, schema.height);
-  }
+  // Dimensioni base - resize anche con solo width o solo height
+  const w = schema.width || 100;
+  const h = schema.height || 100;
+  frame.resize(w, h);
 
   // Reset fills default (Figma aggiunge un bianco di default)
   frame.fills = [];
@@ -328,6 +328,16 @@ async function renderFrame(
 
   // Sizing (dopo appendChild!)
   applySizing(frame, schema.sizing, parent);
+
+  // Per il nodo root (senza parent), applica hug/sizing direttamente
+  if (!parent && schema.sizing) {
+    if (schema.sizing.width === "hug") {
+      frame.layoutSizingHorizontal = "HUG";
+    }
+    if (schema.sizing.height === "hug") {
+      frame.layoutSizingVertical = "HUG";
+    }
+  }
 
   // Render children
   if (schema.children) {

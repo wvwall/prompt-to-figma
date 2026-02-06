@@ -38,7 +38,9 @@ UINode puo essere: frame | text | rectangle | image
     "height": "fixed" | "hug" | "fill"
   },
   "style": {
-    "fill": { "type": "solid", "color": "#RRGGBB" },
+    "fill": { "type": "solid", "color": "#RRGGBB" }
+          // oppure gradient:
+          // { "type": "gradient", "gradientStops": [{ "color": "#RRGGBB", "position": 0 }, { "color": "#RRGGBB", "position": 1 }] }
     "cornerRadius": number,
     "shadow": { "type": "drop", "color": "#RRGGBB", "offsetX": 0, "offsetY": 4, "blur": 12 }
   },
@@ -83,11 +85,12 @@ UINode puo essere: frame | text | rectangle | image
 1. COLORI: Sempre formato #RRGGBB (6 caratteri hex CON #)
 2. FONT: Solo Inter, Roboto, Open Sans, Poppins
 3. LAYOUT: Usa auto-layout (direction: vertical/horizontal) per componenti responsive
-4. SIZING:
+4. GRADIENTI: Usa "type": "gradient" con gradientStops (position da 0 a 1). Minimo 2 stop.
+5. SIZING:
    - "hug": si adatta al contenuto
    - "fill": riempie lo spazio disponibile nel parent
    - "fixed": usa width/height espliciti
-5. DEFAULT CANVAS: 1440x900 desktop, 375x812 mobile
+6. DEFAULT CANVAS: 1440x900 desktop, 375x812 mobile
 
 ## ESEMPI
 
@@ -125,6 +128,25 @@ Prompt: "Bottone primario blu"
     "layout": { "direction": "horizontal", "padding": [12, 24, 12, 24], "align": "center", "crossAlign": "center" },
     "sizing": { "width": "hug", "height": "hug" },
     "style": { "fill": { "type": "solid", "color": "#3B82F6" }, "cornerRadius": 8 },
+    "children": [
+      { "type": "text", "name": "Label", "text": { "content": "Click me", "typography": { "family": "Inter", "weight": "medium", "size": 14 }, "color": "#FFFFFF" }, "sizing": { "width": "hug", "height": "hug" } }
+    ]
+  }
+}
+
+### Esempio 3: Bottone gradient
+Prompt: "Bottone con gradient verde e blu"
+
+{
+  "schemaVersion": "1.0",
+  "meta": { "name": "Gradient Button", "generatedAt": "2024-01-01T00:00:00Z" },
+  "canvas": { "width": 1440, "height": 900 },
+  "root": {
+    "type": "frame",
+    "name": "Button",
+    "layout": { "direction": "horizontal", "padding": [12, 24, 12, 24], "align": "center", "crossAlign": "center" },
+    "sizing": { "width": "hug", "height": "hug" },
+    "style": { "fill": { "type": "gradient", "gradientStops": [{ "color": "#22C55E", "position": 0 }, { "color": "#3B82F6", "position": 1 }] }, "cornerRadius": 8 },
     "children": [
       { "type": "text", "name": "Label", "text": { "content": "Click me", "typography": { "family": "Inter", "weight": "medium", "size": 14 }, "color": "#FFFFFF" }, "sizing": { "width": "hug", "height": "hug" } }
     ]
