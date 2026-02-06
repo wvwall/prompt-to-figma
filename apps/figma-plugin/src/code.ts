@@ -115,6 +115,11 @@ function applyLayout(frame: FrameNode, layout: LayoutConfig): void {
   frame.layoutMode =
     layout.direction === "horizontal" ? "HORIZONTAL" : "VERTICAL";
 
+  // Default: FIXED. Verrà sovrascritto a AUTO per i frame con sizing "hug"
+  // dopo la chiamata a applyLayout in renderFrame.
+  frame.primaryAxisSizingMode = "FIXED";
+  frame.counterAxisSizingMode = "FIXED";
+
   // Padding
   if (layout.padding !== undefined) {
     if (typeof layout.padding === "number") {
@@ -303,15 +308,15 @@ async function renderFrame(
 
   frame.name = schema.name || "Frame";
 
-  // Dimensioni base - resize anche con solo width o solo height
-  const w = schema.width || 100;
-  const h = schema.height || 100;
+  // Dimensioni base - sempre resize per avere un punto di partenza
+  const w = schema.width || (parent ? 100 : 1440);
+  const h = schema.height || (parent ? 100 : 900);
   frame.resize(w, h);
 
   // Reset fills default (Figma aggiunge un bianco di default)
   frame.fills = [];
 
-  // Layout
+  // Layout del frame corrente (imposta layoutMode, padding, gap, ecc.)
   if (schema.layout) {
     applyLayout(frame, schema.layout);
   }
@@ -319,17 +324,25 @@ async function renderFrame(
   // Style
   applyStyle(frame, schema.style);
 
-  // Append to parent
+  // Append to parent PRIMA del sizing (necessario per fill/hug)
   if (parent) {
     parent.appendChild(frame);
   } else {
     figma.currentPage.appendChild(frame);
   }
 
-  // Sizing (dopo appendChild!)
-  applySizing(frame, schema.sizing, parent);
+  // Sizing del frame corrente come figlio del parent
+  if (parent && parent.layoutMode !== "NONE" && schema.sizing) {
+    const sizingMap: Record<string, "FIXED" | "HUG" | "FILL"> = {
+      fixed: "FIXED",
+      hug: "HUG",
+      fill: "FILL",
+    };
+    frame.layoutSizingHorizontal = sizingMap[schema.sizing.width] || "FIXED";
+    frame.layoutSizingVertical = sizingMap[schema.sizing.height] || "FIXED";
+  }
 
-  // Per il nodo root (senza parent), applica hug/sizing direttamente
+  // Per il nodo root (senza parent), applica hug se richiesto
   if (!parent && schema.sizing) {
     if (schema.sizing.width === "hug") {
       frame.layoutSizingHorizontal = "HUG";
@@ -339,7 +352,17 @@ async function renderFrame(
     }
   }
 
-  // Render children
+  // Imposta primaryAxisSizingMode del frame corrente (come container)
+  // Se il frame ha sizing "hug" sull'asse primario, deve essere AUTO
+  if (frame.layoutMode !== "NONE" && schema.sizing) {
+    const primaryAxis = frame.layoutMode === "VERTICAL" ? schema.sizing.height : schema.sizing.width;
+    const crossAxis = frame.layoutMode === "VERTICAL" ? schema.sizing.width : schema.sizing.height;
+
+    frame.primaryAxisSizingMode = (primaryAxis === "hug") ? "AUTO" : "FIXED";
+    frame.counterAxisSizingMode = (crossAxis === "hug") ? "AUTO" : "FIXED";
+  }
+
+  // Render children DOPO che il frame è configurato
   if (schema.children) {
     for (const child of schema.children) {
       await renderNode(child, frame);
