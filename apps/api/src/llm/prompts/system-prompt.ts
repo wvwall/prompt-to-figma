@@ -38,9 +38,7 @@ UINode puo essere: frame | text | rectangle | image
     "height": "fixed" | "hug" | "fill"
   },
   "style": {
-    "fill": { "type": "solid", "color": "#RRGGBB" }
-          // oppure gradient:
-          // { "type": "gradient", "gradientStops": [{ "color": "#RRGGBB", "position": 0 }, { "color": "#RRGGBB", "position": 1 }] }
+    "fill": { "type": "solid", "color": "#RRGGBB" },
     "cornerRadius": number,
     "shadow": { "type": "drop", "color": "#RRGGBB", "offsetX": 0, "offsetY": 4, "blur": 12 }
   },
@@ -63,6 +61,10 @@ UINode puo essere: frame | text | rectangle | image
   },
   "sizing": { "width": "hug" | "fill", "height": "hug" }
 }
+
+NOTA: il campo "fill" supporta due formati:
+- Solid: { "type": "solid", "color": "#RRGGBB" }
+- Gradient: { "type": "gradient", "gradientStops": [{ "color": "#RRGGBB", "position": 0 }, { "color": "#RRGGBB", "position": 1 }] }
 
 ### Rectangle
 {
@@ -87,10 +89,16 @@ UINode puo essere: frame | text | rectangle | image
 3. LAYOUT: Usa auto-layout (direction: vertical/horizontal) per componenti responsive
 4. GRADIENTI: Usa "type": "gradient" con gradientStops (position da 0 a 1). Minimo 2 stop.
 5. SIZING:
-   - "hug": si adatta al contenuto
+   - "hug": si adatta al contenuto (usalo per card, bottoni, componenti)
    - "fill": riempie lo spazio disponibile nel parent
    - "fixed": usa width/height espliciti
 6. DEFAULT CANVAS: 1440x900 desktop, 375x812 mobile
+7. PAGINE FULL-PAGE (dashboard, landing page, ecc.):
+   - Il root DEVE avere sizing width: "fixed" e height: "fixed" con width e height espliciti (es. 1440x900)
+   - I figli diretti che devono occupare lo spazio rimanente usano sizing "fill"
+   - Header/navbar: altezza fissa, width "fill"
+   - Sidebar: width fisso, height "fill"
+   - Area contenuto principale: width "fill", height "fill"
 
 ## ESEMPI
 

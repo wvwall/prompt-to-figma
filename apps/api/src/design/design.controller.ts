@@ -17,7 +17,9 @@ export class DesignController {
   @ApiResponse({ status: 400, description: 'Prompt mancante o invalido' })
   @ApiResponse({ status: 500, description: 'Errore generazione LLM' })
   async generate(@Body() dto: GenerateDesignDto): Promise<PageDesign> {
-    this.logger.log(`POST /api/design - prompt: "${dto.prompt?.substring(0, 50)}..."`);
-    return this.designService.generate(dto.prompt);
+    // Pulisci il prompt da caratteri di controllo
+    const cleanPrompt = dto.prompt?.replace(/[\x00-\x1F\x7F]/g, ' ').trim();
+    this.logger.log(`POST /api/design - prompt: "${cleanPrompt?.substring(0, 50)}..."`);
+    return this.designService.generate(cleanPrompt);
   }
 }
